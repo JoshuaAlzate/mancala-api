@@ -21,7 +21,8 @@ public class ApiApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-					.allowedOrigins("http://localhost:3000").allowedMethods("PUT", "DELETE", "GET");
+					.allowedOrigins("http://localhost:3000").allowedMethods("PUT", "DELETE", "GET", "POST")
+					.allowCredentials(true);
 			}
 		};
 	}
