@@ -51,6 +51,15 @@ public class RoomService {
         socketRoomList();
         return room;
     }
+
+    public Room getRoomDetails(String roomID) {
+        Optional<Room> optionalRoom = roomRepository.findById(roomID);
+        optionalRoom.orElseThrow(() -> new RoomException("The given room ID does not exist"));
+
+        Room room = optionalRoom.get();
+        return room;
+    }
+
         return room;
     }
 
