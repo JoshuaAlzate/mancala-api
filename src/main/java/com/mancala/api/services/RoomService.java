@@ -60,6 +60,40 @@ public class RoomService {
         return room;
     }
 
+    public void checkRoomPlayers(String roomID, String playerID) {
+        Room room = getRoomDetails(roomID);
+        Player firstPlayer = room.getFirstPlayer();
+        Player secondPlayer = room.getSecondPlayer();
+        if (secondPlayer == null) {
+            roomRepository.deleteById(room.id);
+            socketRoomList();
+            return;
+        }
+
+        if (playerID.equals(firstPlayer.id)) {
+            room.setFirstPlayer(secondPlayer);
+            room.setSecondPlayer(null);
+            room.setName(secondPlayer.name + "'s Room");
+        } else if (playerID.equals(secondPlayer.id)) {
+            room.setSecondPlayer(null);
+        }
+        roomRepository.save(room);
+        socketRoomUpdate(room.getId());
+        socketRoomList();
+    }
+
+    public Room setPlayerReady(String roomID, Player player) {
+        Optional<Room> optionalRoom = roomRepository.findById(roomID);
+        optionalRoom.orElseThrow(() -> new RoomException("The given room ID does not exist"));
+
+        Room room = optionalRoom.get();
+        if (player.getId().equals(room.getFirstPlayer().getId())) {
+            room.setFirstPlayer(player);
+        } else if (player.getId().equals(room.getSecondPlayer().getId())) {
+            room.setSecondPlayer(player);
+        }
+        roomRepository.save(room);
+        socketRoomUpdate(room.getId());
         return room;
     }
 
