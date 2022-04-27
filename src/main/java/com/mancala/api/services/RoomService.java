@@ -1,7 +1,10 @@
 package com.mancala.api.services;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import com.mancala.api.enums.RoomStatusEnum;
+import com.mancala.api.exceptions.RoomException;
 import com.mancala.api.models.Player;
 import com.mancala.api.models.Room;
 import com.mancala.api.respository.RoomRepository;
@@ -34,6 +37,19 @@ public class RoomService {
         roomRepository.deleteAll();
         socketRoomList();
         return true;
+    }
+
+    public Room enterRoom(String roomID, Player player) {
+        Optional<Room> optionalRoom = roomRepository.findById(roomID);
+        optionalRoom.orElseThrow(() -> new RoomException("The given room ID does not exist"));
+
+        Room room = optionalRoom.get();
+        room.setSecondPlayer(player);
+        room.setStatus(RoomStatusEnum.FULL);
+        roomRepository.save(room);
+        socketRoomUpdate(room.id);
+        socketRoomList();
+        return room;
     }
         return room;
     }
