@@ -7,6 +7,7 @@ import com.mancala.api.models.Room;
 import com.mancala.api.respository.RoomRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ public class RoomService {
 
     @Autowired
     public final RoomRepository roomRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     public Room createRoom(Player player) {
         Player[] players = new Player[] { player };
@@ -27,4 +29,10 @@ public class RoomService {
         roomRepository.save(room);
         return room;
     }
+
+    // Sockets
+    private void socketRoomList() {
+        simpMessagingTemplate.convertAndSend("/topic/room-list-update", roomRepository.findAll());
+    }
+
 }
