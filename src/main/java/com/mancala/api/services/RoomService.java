@@ -21,12 +21,14 @@ public class RoomService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     public Room createRoom(Player player) {
-        Player[] players = new Player[] { player };
         Room room = new Room();
         room.setId(UUID.randomUUID().toString());
-        room.setName("name");
-        room.setPlayers(players);
+        room.setName(player.name + "'s Room");
+        room.setFirstPlayer(player);
         roomRepository.save(room);
+        socketRoomList();
+        return room;
+    }
 
     public boolean deleteRooms() {
         roomRepository.deleteAll();
