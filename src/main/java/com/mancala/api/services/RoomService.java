@@ -68,4 +68,8 @@ public class RoomService {
         simpMessagingTemplate.convertAndSend("/topic/room-list-update", roomRepository.findAll());
     }
 
+    private void socketRoomUpdate(String roomID) {
+        simpMessagingTemplate.convertAndSend("/topic/room-update/" + roomID, roomRepository.findById(roomID));
+    }
+
 }
