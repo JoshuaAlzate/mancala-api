@@ -2,8 +2,10 @@ package com.mancala.api.controllers;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mancala.api.models.Player;
 import com.mancala.api.services.PlayerService;
+import com.mancala.api.services.RoomService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/player")
 public class PlayerController {
     private final PlayerService playerService;
+    private final RoomService roomService;
 
     @GetMapping("/getAll")
     Iterable<Player> getAllPlayers() {
@@ -38,5 +41,16 @@ public class PlayerController {
     ResponseEntity<Boolean> deletePlayer() {
         log.info("Delete all players: {}");
         return ResponseEntity.ok(playerService.deletePlayers());
+    }
+
+    @PutMapping("/setReady")
+    ResponseEntity<Player> setReadyPlayer(@RequestBody ObjectNode json) {
+        String roomID = json.get("roomID").asText();
+        String playerID = json.get("playerID").asText();
+        Boolean isReady = json.get("isReady").asBoolean();
+        log.info("Set ready of player request: {}", playerID);
+        Player player = playerService.setPlayerReadiness(playerID, isReady);
+        roomService.setPlayerReady(roomID, player);
+        return ResponseEntity.ok(player);
     }
 }
