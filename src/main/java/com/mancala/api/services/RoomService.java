@@ -27,6 +27,12 @@ public class RoomService {
         room.setName("name");
         room.setPlayers(players);
         roomRepository.save(room);
+
+    public boolean deleteRooms() {
+        roomRepository.deleteAll();
+        socketRoomList();
+        return true;
+    }
         return room;
     }
 
