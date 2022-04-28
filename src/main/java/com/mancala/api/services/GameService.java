@@ -6,8 +6,8 @@ import java.util.Optional;
 import com.mancala.api.exceptions.GameException;
 import com.mancala.api.models.Game;
 import com.mancala.api.models.Room;
-import com.mancala.api.respository.GameRepository;
-import com.mancala.api.respository.RoomRepository;
+import com.mancala.api.repository.GameRepository;
+import com.mancala.api.repository.RoomRepository;
 
 import org.springframework.stereotype.Service;
 

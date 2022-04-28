@@ -5,12 +5,13 @@ import java.util.UUID;
 
 import com.mancala.api.exceptions.PlayerException;
 import com.mancala.api.models.Player;
-import com.mancala.api.respository.PlayerRepository;
+import com.mancala.api.repository.PlayerRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+
 @AllArgsConstructor
 @Service
 public class PlayerService {
