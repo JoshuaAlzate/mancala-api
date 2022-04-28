@@ -12,7 +12,6 @@ public class Room {
     public String id;
     public String name;
     public RoomStatusEnum status = RoomStatusEnum.WAITING_FOR_OTHER_PLAYERS;
-    public Player firstPlayer;
-    public Player secondPlayer;
-
+    public RoomPlayer firstPlayer;
+    public RoomPlayer secondPlayer;
 }

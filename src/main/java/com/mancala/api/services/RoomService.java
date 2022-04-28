@@ -7,6 +7,7 @@ import com.mancala.api.enums.RoomStatusEnum;
 import com.mancala.api.exceptions.RoomException;
 import com.mancala.api.models.Player;
 import com.mancala.api.models.Room;
+import com.mancala.api.models.RoomPlayer;
 import com.mancala.api.repository.RoomRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,17 @@ public class RoomService {
     @Autowired
     public final RoomRepository roomRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final PlayerService playerService;
 
     public Room createRoom(Player player) {
         Room room = new Room();
         room.setId(UUID.randomUUID().toString());
         room.setName(player.name + "'s Room");
-        room.setFirstPlayer(player);
+
+        RoomPlayer roomPlayer = new RoomPlayer();
+        roomPlayer.setPlayerDetails(player);
+
+        room.setFirstPlayer(roomPlayer);
         roomRepository.save(room);
         socketRoomList();
         return room;
@@ -66,8 +72,8 @@ public class RoomService {
 
     public void checkRoomPlayers(String roomID, String playerID) {
         Room room = getRoomDetails(roomID);
-        Player firstPlayer = room.getFirstPlayer();
-        Player secondPlayer = room.getSecondPlayer();
+        RoomPlayer firstPlayer = room.getFirstPlayer();
+        RoomPlayer secondPlayer = room.getSecondPlayer();
         if (secondPlayer == null) {
             roomRepository.deleteById(room.id);
             socketRoomList();
