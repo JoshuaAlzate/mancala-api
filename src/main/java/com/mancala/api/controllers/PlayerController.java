@@ -1,6 +1,5 @@
 package com.mancala.api.controllers;
 
-import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mancala.api.models.Player;
@@ -44,13 +43,12 @@ public class PlayerController {
     }
 
     @PutMapping("/setReady")
-    ResponseEntity<Player> setReadyPlayer(@RequestBody ObjectNode json) {
+    ResponseEntity<Void> setReadyPlayer(@RequestBody ObjectNode json) {
         String roomID = json.get("roomID").asText();
         String playerID = json.get("playerID").asText();
         Boolean isReady = json.get("isReady").asBoolean();
         log.info("Set ready of player request: {}", playerID);
-        Player player = playerService.setPlayerReadiness(playerID, isReady);
-        roomService.setPlayerReady(roomID, player);
-        return ResponseEntity.ok(player);
+        roomService.setPlayerReady(roomID, playerID, isReady);
+        return ResponseEntity.ok().build();
     }
 }
