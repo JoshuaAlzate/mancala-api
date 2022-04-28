@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.mancala.api.enums.PlayerTurnEnum;
+
 import org.springframework.data.redis.core.RedisHash;
 
 import lombok.Data;
@@ -14,6 +16,7 @@ public class Game implements Serializable {
     String id;
     Room room;
     ArrayList<Pit> pits = new ArrayList<Pit>();
+    PlayerTurnEnum playerTurn = PlayerTurnEnum.FIRST_PLAYER;
     Player winnerPlayer;
 
     private Integer initialStoneCount = 3;
