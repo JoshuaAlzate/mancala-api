@@ -12,5 +12,4 @@ public class Player implements Serializable {
     public String id;
     public String name;
     public int level;
-    public boolean isReady;
 }
