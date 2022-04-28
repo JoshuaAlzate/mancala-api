@@ -39,12 +39,16 @@ public class RoomService {
         return true;
     }
 
-    public Room enterRoom(String roomID, Player player) {
+    public Room enterRoom(String roomID, String playerID) {
         Optional<Room> optionalRoom = roomRepository.findById(roomID);
         optionalRoom.orElseThrow(() -> new RoomException("The given room ID does not exist"));
 
         Room room = optionalRoom.get();
-        room.setSecondPlayer(player);
+        Player player = playerService.getPlayer(playerID);
+        RoomPlayer roomPlayer = new RoomPlayer();
+        roomPlayer.setPlayerDetails(player);
+
+        room.setSecondPlayer(roomPlayer);
         room.setStatus(RoomStatusEnum.FULL);
         roomRepository.save(room);
         socketRoomUpdate(room.id);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mancala.api.models.Player;
 import com.mancala.api.models.Room;
+import com.mancala.api.models.RoomPlayer;
 import com.mancala.api.services.RoomService;
 
 import org.springframework.http.ResponseEntity;
@@ -46,15 +47,10 @@ public class RoomController {
 
     @PutMapping("/enterRoom")
     ResponseEntity<Room> enterRoom(@RequestBody ObjectNode json) {
-        ObjectMapper jsonObjectMapper = new ObjectMapper();
         String roomID = json.get("roomID").asText();
-        try {
-            Player player = jsonObjectMapper.treeToValue(json.get("player"), Player.class);
-            log.info("Player : {} is entering the room : {}", player.id, roomID);
-            return ResponseEntity.ok(roomService.enterRoom(roomID, player));
-        } catch (Exception exception) {
-            return ResponseEntity.badRequest().build();
-        }
+        String playerID = json.get("playerID").asText();
+        log.info("Player : {} is entering the room : {}", playerID, roomID);
+        return ResponseEntity.ok(roomService.enterRoom(roomID, playerID));
     }
 
     @GetMapping("/getDetails/{roomID}")
