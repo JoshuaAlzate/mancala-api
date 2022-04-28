@@ -31,13 +31,4 @@ public class PlayerService {
         return true;
     }
 
-    public Player setPlayerReadiness(String playerID, Boolean isReady) {
-        Optional<Player> optionalPlayer = playerRepository.findById(playerID);
-        optionalPlayer.orElseThrow(() -> new PlayerException("The given player ID does not exist"));
-
-        Player player = optionalPlayer.get();
-        player.setReady(isReady);
-        playerRepository.save(player);
-        return player;
-    }
 }

@@ -82,15 +82,15 @@ public class RoomService {
         socketRoomList();
     }
 
-    public Room setPlayerReady(String roomID, Player player) {
+    public Room setPlayerReady(String roomID, String roomPlayerID, Boolean isReady) {
         Optional<Room> optionalRoom = roomRepository.findById(roomID);
         optionalRoom.orElseThrow(() -> new RoomException("The given room ID does not exist"));
 
         Room room = optionalRoom.get();
-        if (player.getId().equals(room.getFirstPlayer().getId())) {
-            room.setFirstPlayer(player);
-        } else if (player.getId().equals(room.getSecondPlayer().getId())) {
-            room.setSecondPlayer(player);
+        if (roomPlayerID.equals(room.getFirstPlayer().getId())) {
+            room.getFirstPlayer().setReady(isReady);
+        } else if (roomPlayerID.equals(room.getSecondPlayer().getId())) {
+            room.getSecondPlayer().setReady(isReady);
         }
         roomRepository.save(room);
         socketRoomUpdate(room.getId());
