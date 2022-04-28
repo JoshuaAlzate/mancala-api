@@ -26,6 +26,13 @@ public class PlayerService {
         return player;
     }
 
+    public Player getPlayer(String id) {
+        Optional<Player> optionalPlayer = playerRepository.findById(id);
+        optionalPlayer.orElseThrow(() -> new PlayerException("Cannot find player with provided ID"));
+
+        return optionalPlayer.get();
+    }
+
     public boolean deletePlayers() {
         playerRepository.deleteAll();
         return true;
