@@ -36,4 +36,8 @@ public class Game implements Serializable {
             }
         }
     }
+
+    public Pit getPitByIndex(Integer index) {
+        return pits.get(index);
+    }
 }
