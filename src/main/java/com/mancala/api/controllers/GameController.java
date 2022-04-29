@@ -1,5 +1,6 @@
 package com.mancala.api.controllers;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mancala.api.models.Game;
 import com.mancala.api.services.GameService;
 
@@ -43,5 +44,15 @@ public class GameController {
     ResponseEntity<Game> getGameDetails(@PathVariable("gameID") String gameID) {
         log.info("Getting room details of id: {}", gameID);
         return ResponseEntity.ok(gameService.getGameDetails(gameID));
+    }
+
+    @PutMapping("/move")
+    ResponseEntity<Void> makeAMove(@RequestBody ObjectNode json) {
+        String gameID = json.get("gameID").asText();
+        String playerID = json.get("playerID").asText();
+        Integer pitIndex = json.get("pitIndex").asInt();
+
+        gameService.playerTurn(gameID, playerID, pitIndex);
+        return ResponseEntity.ok().build();
     }
 }
