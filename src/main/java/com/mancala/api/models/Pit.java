@@ -21,7 +21,7 @@ public class Pit {
         return stones == 0;
     }
 
-    public void addStones() {
+    public void addStone() {
         stones++;
     }
 
