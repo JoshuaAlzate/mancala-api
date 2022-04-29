@@ -17,7 +17,9 @@ public class Game implements Serializable {
     Room room;
     ArrayList<Pit> pits = new ArrayList<Pit>();
     PlayerTurnEnum playerTurn = PlayerTurnEnum.FIRST_PLAYER;
-    Player winnerPlayer;
+    RoomPlayer firstPlayer;
+    RoomPlayer secondPlayer;
+    RoomPlayer winnerPlayer;
 
     private Integer initialStoneCount = 3;
 
