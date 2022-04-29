@@ -9,6 +9,7 @@ import com.mancala.api.models.Room;
 import com.mancala.api.repository.GameRepository;
 import com.mancala.api.repository.RoomRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 @Service
 public class GameService {
 
+    @Autowired
     private final GameRepository gameRepository;
     private final RoomRepository roomRepository;
 
@@ -31,6 +33,8 @@ public class GameService {
         Room room = optionalRoom.get();
         Game game = new Game();
         game.setRoom(room);
+        game.setFirstPlayer(room.getFirstPlayer());
+        game.setSecondPlayer(room.getSecondPlayer());
         gameRepository.save(game);
         return game;
     }
