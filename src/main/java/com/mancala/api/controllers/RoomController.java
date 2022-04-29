@@ -1,10 +1,8 @@
 package com.mancala.api.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mancala.api.models.Player;
 import com.mancala.api.models.Room;
-import com.mancala.api.models.RoomPlayer;
 import com.mancala.api.services.RoomService;
 
 import org.springframework.http.ResponseEntity;
