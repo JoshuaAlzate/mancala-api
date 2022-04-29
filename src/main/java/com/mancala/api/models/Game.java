@@ -21,10 +21,13 @@ public class Game implements Serializable {
 
     private Integer initialStoneCount = 3;
 
+    public final static Integer FIRST_PLAYER_HOUSE = 6;
+    public final static Integer SECOND_PLAYER_HOUSE = 13;
+
     public Game() {
         id = UUID.randomUUID().toString();
-        for (Integer x = 0; x < 14; x++) {
-            if ((x + 1) % 7 == 0) {
+        for (Integer x = 0; x < SECOND_PLAYER_HOUSE + 1; x++) {
+            if ((x + 1) % FIRST_PLAYER_HOUSE == 0) {
                 pits.add(new Pit(x, 0, true));
             } else {
                 pits.add(new Pit(x, initialStoneCount, false));
