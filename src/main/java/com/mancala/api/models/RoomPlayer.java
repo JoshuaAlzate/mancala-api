@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 @RedisHash("RoomPlayer")
 public class RoomPlayer extends Player {
     public boolean isReady = false;
+    private boolean isSecondPlayer;
 
     public void setPlayerDetails(Player player) {
         setId(player.id);
