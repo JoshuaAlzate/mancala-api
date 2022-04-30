@@ -6,7 +6,6 @@ import com.mancala.api.enums.PlayerTurnEnum;
 import com.mancala.api.exceptions.GameException;
 import com.mancala.api.models.Game;
 import com.mancala.api.models.Pit;
-import com.mancala.api.models.Player;
 import com.mancala.api.models.Room;
 import com.mancala.api.repository.GameRepository;
 import com.mancala.api.repository.RoomRepository;
@@ -23,7 +22,6 @@ public class GameService {
     @Autowired
     private final GameRepository gameRepository;
     private final RoomRepository roomRepository;
-    private final PlayerService playerService;
 
     public Iterable<Game> getAllGames() {
         return gameRepository.findAll();
@@ -56,9 +54,8 @@ public class GameService {
     }
 
     // Game Logic
-    public void playerTurn(String gameID, String playerID, Integer pitIndex) {
+    public void playerTurn(String gameID, Integer pitIndex) {
         Game game = getGameDetails(gameID);
-        Player player = playerService.getPlayer(playerID);
         Pit selectedPit = game.getPitByIndex(pitIndex);
 
         Integer selectedPitStones = selectedPit.getStones();

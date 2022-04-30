@@ -49,10 +49,9 @@ public class GameController {
     @PutMapping("/move")
     ResponseEntity<Void> makeAMove(@RequestBody ObjectNode json) {
         String gameID = json.get("gameID").asText();
-        String playerID = json.get("playerID").asText();
         Integer pitIndex = json.get("pitIndex").asInt();
 
-        gameService.playerTurn(gameID, playerID, pitIndex);
+        gameService.playerTurn(gameID, pitIndex);
         return ResponseEntity.ok().build();
     }
 }
