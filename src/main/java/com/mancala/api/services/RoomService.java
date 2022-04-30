@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.mancala.api.enums.RoomStatusEnum;
 import com.mancala.api.exceptions.RoomException;
+import com.mancala.api.models.Game;
 import com.mancala.api.models.Player;
 import com.mancala.api.models.Room;
 import com.mancala.api.models.RoomPlayer;
@@ -24,6 +25,7 @@ public class RoomService {
     public final RoomRepository roomRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final PlayerService playerService;
+    private final GameService gameService;
 
     public Room createRoom(Player player) {
         Room room = new Room();
@@ -101,6 +103,11 @@ public class RoomService {
             room.getFirstPlayer().setReady(isReady);
         } else if (roomPlayerID.equals(room.getSecondPlayer().getId())) {
             room.getSecondPlayer().setReady(isReady);
+        }
+
+        if (room.getFirstPlayer().isReady() && room.getSecondPlayer().isReady()) {
+            Game game = gameService.createGame(room.getId());
+            room.setGameID(game.getId());
         }
         roomRepository.save(room);
         socketRoomUpdate(room.getId());
