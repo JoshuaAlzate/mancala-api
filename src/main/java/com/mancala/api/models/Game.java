@@ -29,7 +29,7 @@ public class Game implements Serializable {
     public Game() {
         id = UUID.randomUUID().toString();
         for (Integer x = 0; x < SECOND_PLAYER_HOUSE + 1; x++) {
-            if ((x + 1) % FIRST_PLAYER_HOUSE == 0) {
+            if ((x + 1) % (FIRST_PLAYER_HOUSE + 1 )== 0) {
                 pits.add(new Pit(x, 0, true));
             } else {
                 pits.add(new Pit(x, initialStoneCount, false));
