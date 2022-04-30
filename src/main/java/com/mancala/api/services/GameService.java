@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.mancala.api.enums.PlayerTurnEnum;
 import com.mancala.api.exceptions.GameException;
+import com.mancala.api.exceptions.RoomException;
 import com.mancala.api.models.Game;
 import com.mancala.api.models.Pit;
 import com.mancala.api.models.Room;
@@ -11,6 +12,7 @@ import com.mancala.api.repository.GameRepository;
 import com.mancala.api.repository.RoomRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ public class GameService {
     @Autowired
     private final GameRepository gameRepository;
     private final RoomRepository roomRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     public Iterable<Game> getAllGames() {
         return gameRepository.findAll();
@@ -81,8 +84,10 @@ public class GameService {
         if (!lastPit.isHouse()) {
             switchPlayerTurn(game, lastPit);
         }
+        checkEndGame(game);
 
         gameRepository.save(game);
+        socketGameProgress(game.getId());
 
     }
 
@@ -117,6 +122,58 @@ public class GameService {
                         && lastPin.getId().equals(Game.SECOND_PLAYER_HOUSE)))) {
             game.setPlayerTurn(PlayerTurnEnum.togglePlayerTurn(game.getPlayerTurn()));
         }
+    }
+
+    private void checkEndGame(Game game) {
+        Integer stoneSumOfFirstPlayer = 0;
+        for (int x = 0; x < Game.FIRST_PLAYER_HOUSE; x++) {
+            stoneSumOfFirstPlayer = stoneSumOfFirstPlayer + game.getPitByIndex(x).getStones();
+        }
+
+        Integer stoneSumOfSecondPlayer = 0;
+        for (int x = 7; x < Game.SECOND_PLAYER_HOUSE; x++) {
+            stoneSumOfSecondPlayer = stoneSumOfSecondPlayer + game.getPitByIndex(x).getStones();
+        }
+
+        Pit firstPlayerHouse = game.getPitByIndex(Game.FIRST_PLAYER_HOUSE);
+        Pit secondPlayerHouse = game.getPitByIndex(Game.SECOND_PLAYER_HOUSE);
+
+        if (stoneSumOfFirstPlayer == 0 || stoneSumOfSecondPlayer == 0) {
+
+            for (int x = 1; x < Game.FIRST_PLAYER_HOUSE; x++) {
+                game.getPitByIndex(x).setStones(0);
+            }
+            firstPlayerHouse.setStones(firstPlayerHouse.getStones() + stoneSumOfFirstPlayer);
+
+            for (int x = 8; x < Game.SECOND_PLAYER_HOUSE; x++) {
+                game.getPitByIndex(x).setStones(0);
+            }
+            secondPlayerHouse.setStones(secondPlayerHouse.getStones() + stoneSumOfSecondPlayer);
+
+            game.setWinnerPlayer(firstPlayerHouse.getStones() > secondPlayerHouse.getStones() ? game.getFirstPlayer()
+                    : game.getSecondPlayer());
+
+            if (firstPlayerHouse.getStones().equals(secondPlayerHouse.getStones())) {
+                // TODO: Draw
+            }
+            resetPlayerReadiness(game.getRoom().getId());
+        }
+    }
+
+    private void resetPlayerReadiness(String roomID) {
+        Optional<Room> optionalRoom = roomRepository.findById(roomID);
+        optionalRoom.orElseThrow(() -> new RoomException("The given room ID does not exist"));
+
+        Room room = optionalRoom.get();
+        room.firstPlayer.setReady(false);
+        room.secondPlayer.setReady(false);
+        room.setGameID(null);
+        roomRepository.save(room);
+    }
+
+    // Sockets
+    private void socketGameProgress(String gameID) {
+        simpMessagingTemplate.convertAndSend("/topic/game-progress/" + gameID, gameRepository.findById(gameID));
     }
 
 }
