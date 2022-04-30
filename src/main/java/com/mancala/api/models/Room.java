@@ -14,6 +14,7 @@ public class Room {
     public RoomStatusEnum status = RoomStatusEnum.WAITING_FOR_OTHER_PLAYERS;
     public RoomPlayer firstPlayer;
     public RoomPlayer secondPlayer;
+    public String gameID;
 
     public void setSecondPlayer(RoomPlayer roomPlayer) {
         secondPlayer = roomPlayer;
